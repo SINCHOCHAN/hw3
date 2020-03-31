@@ -1,73 +1,87 @@
-const generateButton = document.getElementById('generateBtn')
-generateButton.addEventListener('click', writePassword)
 // Write password to the #password input
-function writePassword() {
-    var passwordNow = newPass.join('');
-    var passwordText = document.querySelector("#password");
-    passwordText.value = passwordNow;
-} 
-
-var newPass = [];
-var Lowercase = ["q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m",];
-var Uppercase = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M",];
-var Symbols = ["@","#","$","%","^","&",]
-var Numbers = ["0","1","2","3","4","5","6","7","8","9",]
-
-passLength = prompt("pick a # between 8 and 128 please")
-var selectedChoices = 4;
-
+var generateBtn = document.querySelector("#generate");
 
 // Prompts that come up after you click generate password
 // var trueLength = passLength / selectedChoices;
-console.log(selectedChoices);
-var doLowercase = confirm("Do you want Lowercase letters in your Password?")
-var doUppercase = confirm("Do you want Uppercase letters in your new password?")
-var doSymbols = confirm("Do you want Symbols in your new password?")
-var doNumbers = confirm("Do you want Numbers in your new password?") 
 
-function passGen(Milk) {
-    for (var i = 0; i < trueLength; i++) {
-        var numnum = Math.floor(Math.random() * Milk.length); 
-        newPass.push(Milk[numnum]);
-    }
 
+var passwordLength = parseInt(prompt("How long does your password need to be (8-128 characters?)"));
+if (passwordLength >= 8 && passwordLength <= 128) {
+
+  var lowerCase = confirm("Do you want Lowercase letters in your Password?");
+  if (lowerCase) {
+    lowerCase = "abcdefghijklmnopqrstuvwxyz";
+  }
+  else {
+    alert("Do you want Numbers in your new password?");
+    lowerCase = "";
+  }
+
+  var numbers = confirm("Do you want the password to include NUMBERS?");
+  if (numbers) {
+    numbers = "0123456789";
+  }
+  else {
+    alert("Password will not have numbers");
+    numbers = "";
+  }
+
+
+  var symbols = confirm("Do you want the password to include SYMBOLS?");
+  if (symbols) {
+    symbols = "!@#$%^&*()_-+={[}]|\:;'<,>.?";
+  }
+  else {
+    alert("Do you think PW will not have any symbols");
+    symbols = "";
+  }
+
+  var upperCase = confirm("Is the password CASE SENSITIVE?");
+  if (upperCase) {
+    upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  }
+  else {
+    upperCase = lowerCase
+  }
 
 }
+else {
+  alert("Password Failed!")
+}
+console.log(passwordLength)
 
-function copyFunction() {
+function generatePassword(length = passwordLength) {
+
+  var all = numbers + lowerCase + upperCase + symbols;
+
+  var retValue = "";
+
+
+  for (var i = 0; i < length; i++) {
+    var character = Math.floor(Math.random() * all.length);
+    retValue += all.substring(character, character + 1);
+  }
+
+  return retValue;
+
+}
+// Write password to the #password input
+function writePassword() {
+  var password = generatePassword();
+  var passwordText = document.querySelector("#password");
+
+  passwordText.value = password;
+
+}
+// Add event listener to generate button
+generateBtn.addEventListener("click", writePassword);
+
+//copy password to clipboard
+
+function savePassword() {
   var copyText = document.getElementById("password");
   copyText.select();
+  copyText.setSelectionRange(0, 99999)
   document.execCommand("copy");
-  alert("Copied the text: " + copyText.value);
-}
-
-if (!doLowercase) {
-    // passGen(Lowercase);
-    selectedChoices--
-}
-if (!doUppercase) {
-    // passGen(Uppercase);
-    selectedChoices--
-}
-if (!doSymbols) {
-    // passGen(Symbols);
-    selectedChoices--
-}
-if (!doNumbers) {
-    // passGen(Numbers);
-    selectedChoices--
-}
-
-var trueLength = passLength / selectedChoices;
-if (doLowercase) {
-    passGen(Lowercase); 
-}
-if (doUppercase) {
-    passGen(Uppercase);
-}
-if (doSymbols) {
-    passGen(Symbols);
-}
-if (doNumbers) {
-    passGen(Numbers);
+  alert("Copied the Password: " + copyText.value);
 }
